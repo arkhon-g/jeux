@@ -544,7 +544,7 @@ const DICE = [
   });
 
   // --- Secousse du téléphone ---
-  var last = null, lastShake = 0, motionSeen = false;
+  var last = null, lastShake = 0, motionSeen = false, spikes = [];
   function onMotion(e) {
     var a = e.accelerationIncludingGravity;
     if (!a || a.x == null) return;
@@ -556,7 +556,10 @@ const DICE = [
     var now = Date.now();
     if (last) {
       var d = Math.abs(a.x - last.x) + Math.abs(a.y - last.y) + Math.abs(a.z - last.z);
-      if (d > 13 && now - lastShake > 1000) { lastShake = now; rollAll(); }
+      // Seuil bas, mais il faut deux secousses rapprochées : un petit choc isolé ne lance rien.
+      if (d > 7) spikes.push(now);
+      spikes = spikes.filter(function (t) { return now - t < 450; });
+      if (spikes.length >= 2 && now - lastShake > 1000) { lastShake = now; spikes = []; rollAll(); }
     }
     last = { x: a.x, y: a.y, z: a.z };
   }
