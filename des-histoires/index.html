@@ -556,7 +556,7 @@ const DICE = [
     var now = Date.now();
     if (last) {
       var d = Math.abs(a.x - last.x) + Math.abs(a.y - last.y) + Math.abs(a.z - last.z);
-      if (d > 26 && now - lastShake > 1000) { lastShake = now; rollAll(); }
+      if (d > 13 && now - lastShake > 1000) { lastShake = now; rollAll(); }
     }
     last = { x: a.x, y: a.y, z: a.z };
   }
